@@ -38,11 +38,13 @@ SocketAdapter.prototype.open = function (host, port) {
 
                     self._dispatcher(event);
 
-                    // Restart the read for more bytes. We could just call startClientRead() but in
-                    // the case subsequent read operations complete synchronously we start building
-                    // up the stack and potentially crash. We use WinJS.Promise.timeout() to invoke
-                    // this function after the stack for the current call unwinds.
-                    WinJS.Promise.timeout().done(function () { return startClientRead(); });
+                    if (self._socket != null) {
+                        // Restart the read for more bytes. We could just call startClientRead() but in
+                        // the case subsequent read operations complete synchronously we start building
+                        // up the stack and potentially crash. We use WinJS.Promise.timeout() to invoke
+                        // this function after the stack for the current call unwinds.
+                        WinJS.Promise.timeout().done(function () { return startClientRead(); });
+                    }
                 } catch (error) {
                     self.dispatchError(error);
                 }
@@ -64,7 +66,7 @@ SocketAdapter.prototype.write = function (data) {
 };
 
 SocketAdapter.prototype.close = function () {
-    this._dispatchClose(false);
+    this.dispatchClose(false);
     this._socket.close();
     this._socket = null;
 };
@@ -75,7 +77,7 @@ SocketAdapter.prototype.dispatchError = function (error) {
         message: error
     }
 
-    self._dispatcher(event);
+    this._dispatcher(event);
 };
 
 SocketAdapter.prototype.dispatchClose = function (hasError) {
@@ -84,7 +86,7 @@ SocketAdapter.prototype.dispatchClose = function (hasError) {
         hasError: hasError
     }
 
-    self._dispatcher(event);
+    this._dispatcher(event);
 };
 
 var _socketAdapters = {};
