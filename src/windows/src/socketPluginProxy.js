@@ -60,7 +60,7 @@ SocketAdapter.prototype.open = function (host, port) {
 SocketAdapter.prototype.write = function (data) {
     var writer = new Windows.Storage.Streams.DataWriter(this._socket.outputStream);
     writer.writeBytes(data);
-    return writer.storeAsync().done(function () {
+    return writer.storeAsync().then(function () {
         writer.detachStream();
     });
 };

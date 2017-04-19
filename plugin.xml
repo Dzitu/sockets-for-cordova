@@ -72,6 +72,9 @@
                 <param name="wp-package" value="Blocshop.ScoketsForCordova.SocketPlugin"/>
             </feature>
         </config-file>
+        <config-file target="package.appxmanifest" parent="/Package/Capabilities">
+            <Capability Name="privateNetworkClientServer" />
+        </config-file>
         <!--<js-module src="src/windows/src/socketAdapter.js" name="SocketAdapter">
             <merges target="" />
         </js-module>-->
